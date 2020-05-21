@@ -20,6 +20,10 @@ Makefile. This build expects the binutils and gcc utilities to be prefixed
 "sh-". If these tools are not, please ensure you prefix them appropriately or
 update the Makefile accordingly.
 
+You will need to supply your own IP, I have not written my own yet and am
+not going to host one from a licensed game or development kit here. Makefile
+expects this to be named ip.bin, but feel free to get creative.
+
 Note: If you want to build your own toolchain, it isn't hard, the above
 binutils and gcc (-core) packages can be build with:
 
