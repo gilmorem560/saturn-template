@@ -1,1 +1,8 @@
+# GNU Files
+**/.deps
+**/.dirstamp
 ip.bin
+/.cproject
+/.project
+/.settings
+
