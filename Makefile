@@ -2,12 +2,12 @@
 # SGL Makefile Template
 #
 
-CC = gcc
-LD = ld
-RM = deltree /Y
-CONV = objcopy
+CC = sh-gcc
+LD = sh-ld
+RM = rm -f
+CONV = sh-objcopy
 
-SGLDIR = C:/Cygnus
+SGLDIR = /usr/sh-saturn-coff
 SGLIDR = $(SGLDIR)/include
 SGLLDR = $(SGLDIR)/lib
 
@@ -24,7 +24,7 @@ LDFILE = $(TARGET:.coff=.lnk)
 MPFILE = $(TARGET:.coff=.map)
 MAKEFILE = Makefile
 
-all: $(TARGET) $(TARGET1)
+all: $(TARGET) $(TARGET1) game.bin
 
 $(TARGET): $(OBJS) $(MAKEFILE) $(LDFILE)
 	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
@@ -32,18 +32,21 @@ $(TARGET): $(OBJS) $(MAKEFILE) $(LDFILE)
 $(TARGET1): $(OBJS) $(MAKEFILE)
 	$(CONV) -O binary $(TARGET) $(TARGET1)
 
-disc: $(TARGET1)
-	vcdbuild vcd
-	vcdmktoc vcd
+game.iso: $(TARGET1)
+	mkisofs -o game.iso $(TARGET1)
+	mksatiso game.iso ip.bin
+	
+game.bin: game.iso
+	poweriso convert game.iso -o game.bin -ot bin
 
 $(LDFILE) : $(MAKEFILE)
-	echo Making $(LDFILE)
-	echo SECTIONS {			>  $@
-	echo 	SLSTART 0x06004000 : {	>> $@
-	echo 		___Start = .;	>> $@
-	echo 		*(SLSTART)	>> $@
-	echo 	}			>> $@
-	echo }				>> $@
+	echo "Making $(LDFILE)"
+	echo "SECTIONS { "			>  $@
+	echo "	SLSTART 0x06010000 : { "	>> $@
+	echo "		___Start = .; "		>> $@
+	echo "		*(SLSTART) "		>> $@
+	echo "	} "				>> $@
+	echo "}	"				>> $@
 
 .SUFFIXES: .asm
 
@@ -51,4 +54,4 @@ $(LDFILE) : $(MAKEFILE)
 	$(CC) $< $(CCFLAGS) -o $@
 
 clean:
-	$(RM) $(OBJS) $(TARGET:.coff=.*) vcd.dsk vcd.rti vcd.toc
+	$(RM) $(OBJS) $(TARGET:.coff=.*) game.iso game.bin game.cue

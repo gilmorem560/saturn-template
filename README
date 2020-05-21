@@ -1,0 +1,39 @@
+Saturn Template
+---------------
+Author: Matt Gilmore
+Email: segaloco@gmail.com
+
+Presently this is just a template for building a basic Sega Saturn game. This 
+code currently compiles with the following tools and libraries:
+
+binutils-2.16.1
+gcc-3.3.6
+sgl-1.3
+
+mkisofs
+poweriso
+
+Additionally, a tool for slipping in the initial program is provided, 
+tools/mksatiso.c, but any binary replacement of the .iso header will do.
+Likewise mkisofs and poweriso may be swapped out for alternatives in the 
+Makefile. This build expects the binutils and gcc utilities to be prefixed 
+"sh-". If these tools are not, please ensure you prefix them appropriately or
+update the Makefile accordingly.
+
+Note: If you want to build your own toolchain, it isn't hard, the above
+binutils and gcc (-core) packages can be build with:
+
+	./configure --target=sh-saturn-coff --program-prefix="sh-"
+	
+Be sure to include void __main() { } somewhere in the code if not in the main
+file itself. This is necessary due to collect2 behavior in the gcc suite that
+expects to link to libgcc.a for constructor loading in C++. First, this trunk
+does not and never will support C++. Second, the libgcc.a provided with the
+Saturn development kit does not implement this function, nor can I get a fresh
+libgcc.a to build. You're on your own with that one, either find a valid
+sh-*-coff libgcc.a library or figure out how to build one. If you pull off the
+latter, please contact me at <segaloco@gmail.com> or raise a PR with the
+necessary instructions added to this README. Likewise, if you get C++ working
+via this approach on the Saturn, feel free to invalidate the above statement
+in your own fork. I just have no interest in working with C++ on this system
+at this time, seems like too much overhead for the hardware.
