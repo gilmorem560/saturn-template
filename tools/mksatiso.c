@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 	}
 	
 	/* tidy up */
+	free(buffer);
 	fclose(header);
 	fclose(iso);
 	return ret_val;
