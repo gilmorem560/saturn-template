@@ -49,10 +49,10 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "mksatiso: iso write error\n");
 			ret_val = EXIT_FAILURE;
 		}
+		free(buffer);
 	}
 	
 	/* tidy up */
-	free(buffer);
 	fclose(header);
 	fclose(iso);
 	return ret_val;
